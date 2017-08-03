@@ -10,24 +10,34 @@ var query = {
     USER_EXIST_CHECK : "select username from username_mapping where username=?"
 }
 
+let getResult = function (queryBuild,emailId,callback) {
+    casDbCli.execute(queryBuild, [emailId], {prepare: true}, function (err, result) {
+        if (err) {
+            return callback(err);
+        } else {
+            if (result && result.rows.length > 0) {
+                return callback("User Not Exist")
+            }else{
+                return callback(true);
+            }
+        }
+    })
+}
+
 let dbConnection = (emailId) => {
     return new Promise((resolve,reject) => {
         var queryBuild = query.USER_EXIST_CHECK;
-        casDbCli.execute(queryBuild, [emailId], {prepare: true}, function (err, result) {
-            if (err) {
+        getResult(queryBuild,emailId,function (err,res) {
+            if(err){
                 reject(err);
-            } else {
-                if (result && result.rows.length > 0) {
-                    reject("User Not Exist")
-                }else{
-                    resolve(true);
-                }
+            }else{
+                resolve(res);
             }
         })
     })
 }
 
-dbConnection("dilipkumar1@hakunamatata.in").then(function (query) {
+dbConnection("dilipkumar@hakunamatata.in").then(function (query) {
     console.log(query);
 }).catch(err => {
     console.log(err)
