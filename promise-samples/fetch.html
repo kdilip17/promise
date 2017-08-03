@@ -1,0 +1,12 @@
+<script>
+"use strict";
+
+var url = 'http://devappv2.liad.in/help'
+
+fetch(url, {mode: 'no-cors'})
+    .then(function(response) {
+        console.log(response);
+    }).catch(function(error) {
+    console.log('Request failed', error)
+});
+</script>
